@@ -48,25 +48,34 @@ terrain = InfiniteMidpointDisplacement()
 # Окно просмотра
 view_x = 0.0
 view_width = 10.0
+view_y1 = -5
+view_y2 = 5
 
 # Создание графика
 fig, ax = plt.subplots(figsize=(12, 4))
 line, = ax.plot([], [], lw=2)
-ax.set_ylim(-5, 5)
+ax.set_ylim(view_y1, view_y2)
 
 def update_plot():
     visible = terrain.get_points_in_view(view_x, view_x + view_width)
-    x_vals, y_vals = zip(*visible)
+    x_vals, y_vals = zip(*visible) #разбивает список на два отдельных для х и у
     line.set_data(x_vals, y_vals)
     ax.set_xlim(view_x, view_x + view_width)
+    ax.set_ylim(view_y1, view_y2)
     fig.canvas.draw_idle()
 
 def on_key(event):
-    global view_x
+    global view_x, view_y1, view_y2
     if event.key == 'right':
         view_x += 1.0
     elif event.key == 'left':
         view_x -= 1.0
+    elif event.key == 'up':
+        view_y1 += 1
+        view_y2 += 1
+    elif event.key == 'down':
+        view_y1 += -1
+        view_y2 += -1
     update_plot()
 
 fig.canvas.mpl_connect('key_press_event', on_key)
